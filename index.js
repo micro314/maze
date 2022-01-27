@@ -1,13 +1,15 @@
 const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 
-const mazeWidth = window.innerWidth;
-const mazeHeight = window.innerHeight;
-const cells = 10;
+const mazeWidth = window.innerWidth - 8;
+const mazeHeight = window.innerHeight - 8;
+const cellsWide = 12;
+const cellsHigh = 8;
 
-const unitLength = mazeWidth / cells;
+const unitLengthX = mazeWidth / cellsWide;
+const unitLengthY = mazeHeight / cellsHigh;
 const wallDepth = 4;
-const speedLimit = unitLength / 10;
-const acceleration = unitLength / 30;
+const speedLimit = Math.max(unitLengthX, unitLengthY) / 10;
+const acceleration = Math.max(unitLengthX, unitLengthY) / 30;
 
 const engine = Engine.create();
 engine.world.gravity.y = 0;
@@ -37,10 +39,10 @@ const shuffle = (arr) => {
     return arr;
 }
 
-const grid = Array(cells).fill(null)
-    .map(() => Array(cells).fill(false));
-const verticals = Array(cells).fill(null).map(() => Array(cells - 1).fill(false));
-const horizontals = Array(cells - 1).fill(null).map(() => Array(cells).fill(false));
+const grid = Array(cellsHigh).fill(null)
+    .map(() => Array(cellsWide).fill(false));
+const verticals = Array(cellsHigh).fill(null).map(() => Array(cellsWide - 1).fill(false));
+const horizontals = Array(cellsHigh - 1).fill(null).map(() => Array(cellsWide).fill(false));
 
 const walls = [
     Bodies.rectangle(mazeWidth / 2, 0, mazeWidth, wallDepth * 2, { isStatic: true }),
@@ -50,8 +52,8 @@ const walls = [
 ];
 World.add(world, walls);
 
-const startRow = Math.floor(Math.random() * cells);
-const startColumn = Math.floor(Math.random() * cells);
+const startRow = Math.floor(Math.random() * cellsHigh);
+const startColumn = Math.floor(Math.random() * cellsWide);
 
 const stepThroughCell = (row, column) => {
     if (grid[row][column]) {
@@ -68,7 +70,7 @@ const stepThroughCell = (row, column) => {
 
     for (let neighbor of neighbors) {
         const [nextRow, nextColumn, direction] = neighbor;
-        if (nextRow < 0 || nextRow >= cells || nextColumn < 0 || nextColumn >= cells) {
+        if (nextRow < 0 || nextRow >= cellsHigh || nextColumn < 0 || nextColumn >= cellsWide) {
             continue;
         }
         if (grid[nextRow][nextColumn]) {
@@ -97,9 +99,9 @@ horizontals.forEach((row, rowIndex) => {
         }
 
         const wall = Bodies.rectangle(
-            (colIndex + 0.5) * unitLength,
-            (rowIndex + 1) * unitLength,
-            unitLength,
+            (colIndex + 0.5) * unitLengthX,
+            (rowIndex + 1) * unitLengthY,
+            unitLengthX,
             wallDepth,
             {
                 label: 'wall',
@@ -117,10 +119,10 @@ verticals.forEach((row, rowIndex) => {
         }
 
         const wall = Bodies.rectangle(
-            (colIndex + 1) * unitLength,
-            (rowIndex + 0.5) * unitLength,
+            (colIndex + 1) * unitLengthX,
+            (rowIndex + 0.5) * unitLengthY,
             wallDepth,
-            unitLength,
+            unitLengthY,
             {
                 label: 'wall',
                 isStatic: true
@@ -131,10 +133,10 @@ verticals.forEach((row, rowIndex) => {
 });
 
 const goal = Bodies.rectangle(
-    mazeWidth - 0.5 * unitLength,
-    mazeHeight - 0.5 * unitLength,
-    unitLength * 0.7,
-    unitLength * 0.7,
+    mazeWidth - 0.5 * unitLengthX,
+    mazeHeight - 0.5 * unitLengthY,
+    unitLengthX * 0.7,
+    unitLengthY * 0.7,
     {
         label: 'goal',
         isStatic: true
@@ -143,9 +145,9 @@ const goal = Bodies.rectangle(
 World.add(world, goal);
 
 const ball = Bodies.circle(
-    0.5 * unitLength,
-    0.5 * unitLength,
-    unitLength * 0.25,
+    0.5 * unitLengthX,
+    0.5 * unitLengthY,
+    Math.min(unitLengthX, unitLengthY) * 0.25,
     {
         label: 'ball',
     }
