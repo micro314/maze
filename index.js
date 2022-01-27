@@ -2,6 +2,7 @@ const { Engine, Render, Runner, World, Bodies } = Matter;
 
 const width = 600;
 const height = 600;
+const cells = 3;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -17,8 +18,10 @@ const render = Render.create({
 Render.run(render);
 Runner.run(Runner.create(), engine);
 
-const grid = Array(4).fill(null)
-    .map(() => Array(3).fill(false));
+const grid = Array(cells).fill(null)
+    .map(() => Array(cells).fill(false));
+const verticals = Array(cells).fill(null).map(() => Array(cells - 1).fill(false));
+const horizontals = Array(cells - 1).fill(null).map(() => Array(cells).fill(false));
 
 const walls = [
     Bodies.rectangle(width / 2, 0, width, 40, { isStatic: true }),
