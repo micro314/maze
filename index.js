@@ -1,11 +1,11 @@
 const { Engine, Render, Runner, World, Bodies } = Matter;
 
-const mazeWidth = 1000;
-const mazeHeight = 1000;
-const cells = 50;
+const mazeWidth = 500;
+const mazeHeight = 500;
+const cells = 5;
 
 const unitLength = mazeWidth / cells;
-const wallDepth = 1;
+const wallDepth = 4;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -39,10 +39,10 @@ const verticals = Array(cells).fill(null).map(() => Array(cells - 1).fill(false)
 const horizontals = Array(cells - 1).fill(null).map(() => Array(cells).fill(false));
 
 const walls = [
-    Bodies.rectangle(mazeWidth / 2, 0, mazeWidth, 4, { isStatic: true }),
-    Bodies.rectangle(mazeWidth / 2, mazeHeight, mazeWidth, 4, { isStatic: true }),
-    Bodies.rectangle(0, mazeHeight / 2, 4, mazeHeight, { isStatic: true }),
-    Bodies.rectangle(mazeWidth, mazeHeight / 2, 4, mazeHeight, { isStatic: true })
+    Bodies.rectangle(mazeWidth / 2, 0, mazeWidth, wallDepth * 2, { isStatic: true }),
+    Bodies.rectangle(mazeWidth / 2, mazeHeight, mazeWidth, wallDepth * 2, { isStatic: true }),
+    Bodies.rectangle(0, mazeHeight / 2, wallDepth * 2, mazeHeight, { isStatic: true }),
+    Bodies.rectangle(mazeWidth, mazeHeight / 2, wallDepth * 2, mazeHeight, { isStatic: true })
 ];
 World.add(world, walls);
 
@@ -119,3 +119,19 @@ verticals.forEach((row, rowIndex) => {
         World.add(world, wall);
     });
 });
+
+const goal = Bodies.rectangle(
+    mazeWidth - 0.5 * unitLength,
+    mazeHeight - 0.5 * unitLength,
+    unitLength * 0.7,
+    unitLength * 0.7,
+    { isStatic: true }
+);
+World.add(world, goal);
+
+const ball = Bodies.circle(
+    0.5 * unitLength,
+    0.5 * unitLength,
+    unitLength * 0.25
+)
+World.add(world, ball);
