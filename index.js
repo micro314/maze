@@ -2,7 +2,7 @@ const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 
 const mazeWidth = 500;
 const mazeHeight = 500;
-const cells = 3;
+const cells = 10;
 
 const unitLength = mazeWidth / cells;
 const wallDepth = 4;
@@ -101,7 +101,10 @@ horizontals.forEach((row, rowIndex) => {
             (rowIndex + 1) * unitLength,
             unitLength,
             wallDepth,
-            { isStatic: true },
+            {
+                label: 'wall',
+                isStatic: true
+            }
         );
         World.add(world, wall);
     });
@@ -118,7 +121,10 @@ verticals.forEach((row, rowIndex) => {
             (rowIndex + 0.5) * unitLength,
             wallDepth,
             unitLength,
-            { isStatic: true }
+            {
+                label: 'wall',
+                isStatic: true
+            }
         );
         World.add(world, wall);
     });
@@ -181,7 +187,14 @@ Events.on(engine, 'collisionStart', event => {
     event.pairs.forEach(collision => {
         const labels = ['ball', 'goal'];
         if (labels.includes(collision.bodyA.label) && labels.includes(collision.bodyB.label)) {
-            console.log('User won');
+            // User wins
+            world.gravity.y = 0.2;
+            world.bodies.forEach(body => {
+                if (body.label === 'wall') {
+                    Body.setStatic(body, false);
+                    Body.setVelocity(body, { x: Math.random() * 10 - 5, y: Math.random() * -10 });
+                }
+            })
         }
     })
 });
