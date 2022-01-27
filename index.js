@@ -18,6 +18,18 @@ const render = Render.create({
 Render.run(render);
 Runner.run(Runner.create(), engine);
 
+const shuffle = (arr) => {
+    let counter = arr.length;
+    while (counter > 0) {
+        const index = Math.floor(Math.random() * counter);
+        counter--;
+        const temp = arr[counter];
+        arr[counter] = arr[index];
+        arr[index] = temp;
+    }
+    return arr;
+}
+
 const grid = Array(cells).fill(null)
     .map(() => Array(cells).fill(false));
 const verticals = Array(cells).fill(null).map(() => Array(cells - 1).fill(false));
@@ -40,12 +52,12 @@ const stepThroughCell = (row, column) => {
     }
     grid[row][column] = true;
 
-    const neighbors = [
+    const neighbors = shuffle([
         [row - 1, column],
         [row, column + 1],
         [row + 1, column],
         [row, column - 1]
-    ];
+    ]);
 };
 
 stepThroughCell(startRow, startColumn);
