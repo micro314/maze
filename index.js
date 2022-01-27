@@ -167,6 +167,7 @@ const ball = Bodies.circle(
 World.add(world, ball);
 
 document.addEventListener('keydown', event => {
+    hideTutorial();
     const { x, y } = ball.velocity;
     const newVelocity = { x, y };
 
@@ -187,6 +188,10 @@ document.addEventListener('keydown', event => {
     Body.setVelocity(ball, limitedNewVelocity);
 });
 
+const hideTutorial = () => {
+    document.querySelector('#tutorial').classList.add('hidden');
+}
+
 const applySpeedLimit = (oldVelocity, speed) => {
     const limitedVelocity = oldVelocity;
     limitedVelocity.x = Math.max(-speed, limitedVelocity.x);
@@ -202,6 +207,7 @@ Events.on(engine, 'collisionStart', event => {
         const labels = ['ball', 'goal'];
         if (labels.includes(collision.bodyA.label) && labels.includes(collision.bodyB.label)) {
             // User wins
+            document.querySelector('#winner').classList.remove('hidden');
             world.gravity.y = 0.2;
             world.bodies.forEach(body => {
                 if (body.label === 'wall') {

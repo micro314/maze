@@ -7,9 +7,40 @@
         body {
             margin: 0;
         }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1 {
+            color: white;
+            font-size: 36px;
+        }
+
+        .centered {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            z-index: 1;
+            height: 100vh;
+            width: 100vw;
+        }
     </style>
 </head>
 <body>
+    <div id="tutorial" class="centered">
+        <h1>
+            Find your way to the goal!<br/>
+            W: Move up<br/>
+            A: Move left<br/>
+            S: Move down<br/>
+            D: Move right<br/>
+        </h1>
+    </div>
+    <div id="winner" class="centered hidden">
+        <h1>You Win!</h1>
+    </div>
     <script src="index.js"></script>
 </body>
 </html>
