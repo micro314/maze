@@ -17,6 +17,9 @@ const render = Render.create({
 Render.run(render);
 Runner.run(Runner.create(), engine);
 
+const grid = Array(4).fill(null)
+    .map(() => Array(3).fill(false));
+
 const walls = [
     Bodies.rectangle(width / 2, 0, width, 40, { isStatic: true }),
     Bodies.rectangle(width / 2, height, width, 40, { isStatic: true }),
