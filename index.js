@@ -1,8 +1,11 @@
 const { Engine, Render, Runner, World, Bodies } = Matter;
 
-const width = 600;
-const height = 600;
-const cells = 3;
+const mazeWidth = 1000;
+const mazeHeight = 1000;
+const cells = 50;
+
+const unitLength = mazeWidth / cells;
+const wallDepth = 1;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -10,8 +13,8 @@ const render = Render.create({
     element: document.body,
     engine: engine,
     options: {
-        width,
-        height,
+        width: mazeWidth,
+        height: mazeHeight,
         wireframes: true
     }
 });
@@ -36,10 +39,10 @@ const verticals = Array(cells).fill(null).map(() => Array(cells - 1).fill(false)
 const horizontals = Array(cells - 1).fill(null).map(() => Array(cells).fill(false));
 
 const walls = [
-    Bodies.rectangle(width / 2, 0, width, 40, { isStatic: true }),
-    Bodies.rectangle(width / 2, height, width, 40, { isStatic: true }),
-    Bodies.rectangle(0, height / 2, 40, height, { isStatic: true }),
-    Bodies.rectangle(width, height / 2, 40, height, { isStatic: true })
+    Bodies.rectangle(mazeWidth / 2, 0, mazeWidth, 4, { isStatic: true }),
+    Bodies.rectangle(mazeWidth / 2, mazeHeight, mazeWidth, 4, { isStatic: true }),
+    Bodies.rectangle(0, mazeHeight / 2, 4, mazeHeight, { isStatic: true }),
+    Bodies.rectangle(mazeWidth, mazeHeight / 2, 4, mazeHeight, { isStatic: true })
 ];
 World.add(world, walls);
 
@@ -82,3 +85,37 @@ const stepThroughCell = (row, column) => {
 };
 
 stepThroughCell(startRow, startColumn);
+
+horizontals.forEach((row, rowIndex) => {
+    row.forEach((open, colIndex) => {
+        if (open) {
+            return;
+        }
+
+        const wall = Bodies.rectangle(
+            (colIndex + 0.5) * unitLength,
+            (rowIndex + 1) * unitLength,
+            unitLength,
+            wallDepth,
+            { isStatic: true },
+        );
+        World.add(world, wall);
+    });
+});
+
+verticals.forEach((row, rowIndex) => {
+    row.forEach((open, colIndex) => {
+        if (open) {
+            return;
+        }
+
+        const wall = Bodies.rectangle(
+            (colIndex + 1) * unitLength,
+            (rowIndex + 0.5) * unitLength,
+            wallDepth,
+            unitLength,
+            { isStatic: true }
+        );
+        World.add(world, wall);
+    });
+});
