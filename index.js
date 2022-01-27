@@ -1,8 +1,8 @@
-const { Engine, Render, Runner, World, Bodies, Body } = Matter;
+const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 
 const mazeWidth = 500;
 const mazeHeight = 500;
-const cells = 15;
+const cells = 3;
 
 const unitLength = mazeWidth / cells;
 const wallDepth = 4;
@@ -129,14 +129,20 @@ const goal = Bodies.rectangle(
     mazeHeight - 0.5 * unitLength,
     unitLength * 0.7,
     unitLength * 0.7,
-    { isStatic: true }
+    {
+        label: 'goal',
+        isStatic: true
+    }
 );
 World.add(world, goal);
 
 const ball = Bodies.circle(
     0.5 * unitLength,
     0.5 * unitLength,
-    unitLength * 0.25
+    unitLength * 0.25,
+    {
+        label: 'ball',
+    }
 )
 World.add(world, ball);
 
@@ -154,11 +160,11 @@ document.addEventListener('keydown', event => {
         newVelocity.y += acceleration;
     }
     if (event.code === 'KeyD') {
-        newVelocity.x += acceleration;    
+        newVelocity.x += acceleration;
     }
 
     const limitedNewVelocity = applySpeedLimit(newVelocity, speedLimit);
-    Body.setVelocity(ball, limitedNewVelocity);    
+    Body.setVelocity(ball, limitedNewVelocity);
 });
 
 const applySpeedLimit = (oldVelocity, speed) => {
@@ -170,3 +176,12 @@ const applySpeedLimit = (oldVelocity, speed) => {
 
     return limitedVelocity;
 };
+
+Events.on(engine, 'collisionStart', event => {
+    event.pairs.forEach(collision => {
+        const labels = ['ball', 'goal'];
+        if (labels.includes(collision.bodyA.label) && labels.includes(collision.bodyB.label)) {
+            console.log('User won');
+        }
+    })
+});
