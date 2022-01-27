@@ -21,7 +21,7 @@ const render = Render.create({
     options: {
         width: mazeWidth,
         height: mazeHeight,
-        wireframes: true
+        wireframes: false
     }
 });
 Render.run(render);
@@ -105,7 +105,10 @@ horizontals.forEach((row, rowIndex) => {
             wallDepth,
             {
                 label: 'wall',
-                isStatic: true
+                isStatic: true,
+                render: {
+                    fillStyle: 'red'
+                }
             }
         );
         World.add(world, wall);
@@ -125,7 +128,10 @@ verticals.forEach((row, rowIndex) => {
             unitLengthY,
             {
                 label: 'wall',
-                isStatic: true
+                isStatic: true,
+                render: {
+                    fillStyle: 'red'
+                }
             }
         );
         World.add(world, wall);
@@ -139,7 +145,10 @@ const goal = Bodies.rectangle(
     unitLengthY * 0.7,
     {
         label: 'goal',
-        isStatic: true
+        isStatic: true,
+        render: {
+            fillStyle: 'green'
+        }
     }
 );
 World.add(world, goal);
@@ -150,6 +159,9 @@ const ball = Bodies.circle(
     Math.min(unitLengthX, unitLengthY) * 0.25,
     {
         label: 'ball',
+        render: {
+            fillStyle: 'cyan'
+        }
     }
 )
 World.add(world, ball);
