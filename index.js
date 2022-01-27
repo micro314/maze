@@ -135,3 +135,18 @@ const ball = Bodies.circle(
     unitLength * 0.25
 )
 World.add(world, ball);
+
+document.addEventListener('keydown', event => {
+    if (event.code === 'KeyW') {
+        
+    }
+    if (event.code === 'KeyA') {
+
+    }
+    if (event.code === 'KeyS') {
+
+    }
+    if (event.code === 'KeyD') {
+
+    }
+});
