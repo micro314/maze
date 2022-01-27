@@ -53,11 +53,22 @@ const stepThroughCell = (row, column) => {
     grid[row][column] = true;
 
     const neighbors = shuffle([
-        [row - 1, column],
-        [row, column + 1],
-        [row + 1, column],
-        [row, column - 1]
+        [row - 1, column, 'up'],
+        [row, column + 1, 'right'],
+        [row + 1, column, 'down'],
+        [row, column - 1, 'left']
     ]);
+
+    for (let neighbor of neighbors) {
+        const [nextRow, nextColumn, direction] = neighbor;
+        if (nextRow < 0 || nextRow >= cells || nextColumn < 0 || nextColumn >= cells) {
+            continue;
+        }
+        if (grid[nextRow][nextColumn]) {
+            continue;
+        }
+
+    }
 };
 
 stepThroughCell(startRow, startColumn);
