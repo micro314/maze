@@ -1,7 +1,7 @@
 const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 
-const mazeWidth = 500;
-const mazeHeight = 500;
+const mazeWidth = window.innerWidth;
+const mazeHeight = window.innerHeight;
 const cells = 10;
 
 const unitLength = mazeWidth / cells;
