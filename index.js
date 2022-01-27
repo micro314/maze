@@ -2,12 +2,16 @@ const { Engine, Render, Runner, World, Bodies, Body } = Matter;
 
 const mazeWidth = 500;
 const mazeHeight = 500;
-const cells = 5;
+const cells = 15;
 
 const unitLength = mazeWidth / cells;
 const wallDepth = 4;
+const speedLimit = unitLength / 10;
+const acceleration = unitLength / 30;
 
 const engine = Engine.create();
+engine.world.gravity.y = 0;
+
 const { world } = engine;
 const render = Render.create({
     element: document.body,
@@ -138,17 +142,31 @@ World.add(world, ball);
 
 document.addEventListener('keydown', event => {
     const { x, y } = ball.velocity;
+    const newVelocity = { x, y };
 
     if (event.code === 'KeyW') {
-        Body.setVelocity(ball, { x, y: y - 5 });    
+        newVelocity.y -= acceleration;
     }
     if (event.code === 'KeyA') {
-        Body.setVelocity(ball, { x: x - 5, y });    
+        newVelocity.x -= acceleration;
     }
     if (event.code === 'KeyS') {
-        Body.setVelocity(ball, { x, y: y + 5 });    
+        newVelocity.y += acceleration;
     }
     if (event.code === 'KeyD') {
-        Body.setVelocity(ball, { x: x + 5, y });    
+        newVelocity.x += acceleration;    
     }
+
+    const limitedNewVelocity = applySpeedLimit(newVelocity, speedLimit);
+    Body.setVelocity(ball, limitedNewVelocity);    
 });
+
+const applySpeedLimit = (oldVelocity, speed) => {
+    const limitedVelocity = oldVelocity;
+    limitedVelocity.x = Math.max(-speed, limitedVelocity.x);
+    limitedVelocity.x = Math.min(speed, limitedVelocity.x);
+    limitedVelocity.y = Math.max(-speed, limitedVelocity.y);
+    limitedVelocity.y = Math.min(speed, limitedVelocity.y);
+
+    return limitedVelocity;
+};
